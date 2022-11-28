@@ -2,19 +2,13 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.entities.Player;
 import com.mygdx.handlers.GameStateManager;
 
@@ -33,8 +27,6 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float timeBuffer;
 	private OrthographicCamera camera;
 	private OrthographicCamera hudCamera;
-	private TiledMap map1;
-	private IsometricTiledMapRenderer mapRenderer;
 
 	private GameStateManager gsm;
 
@@ -50,12 +42,10 @@ public class MyGdxGame extends ApplicationAdapter {
 		camera.setToOrtho(false, V_WIDTH / 2, V_HEIGHT / 2);
 		hudCamera = new OrthographicCamera();
 		hudCamera.setToOrtho(false, V_WIDTH, V_HEIGHT);
-		map1 = new TmxMapLoader().load("maps/map1.tmx");
 		player = new Player(new Sprite(new Texture("male/male_back.png")));
 		player.setScale(0.4f);
 
 		float unitScale = 1/2f;
-		mapRenderer = new IsometricTiledMapRenderer(map1, unitScale);
 		gsm = new GameStateManager(this);
 	}
 
@@ -86,10 +76,6 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	public OrthographicCamera getHudCamera() {
 		return hudCamera;
-	}
-
-	public IsometricTiledMapRenderer getMapRenderer() {
-		return mapRenderer;
 	}
 
 	public Player getPlayer() {

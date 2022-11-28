@@ -1,11 +1,8 @@
 package com.mygdx.handlers;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.Arrays;
@@ -19,11 +16,6 @@ public class Animator {
     public static final int WALK_RIGHT_INDEX = 3;
     public static final int WALK_DOWN_INDEX = 2;
     public static final int WALK_LEFT_INDEX = 1;
-
-    private TextureRegion standUp;
-    private TextureRegion standRight;
-    private TextureRegion standDown;
-    private TextureRegion standLeft;
 
     // Objects used
     Animation<TextureRegion>[] walkAnimation; // Must declare frame type (TextureRegion)
