@@ -8,8 +8,9 @@ import com.mygdx.game.MyGdxGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(60);
-		config.setTitle("My GDX Game");
+		config.setForegroundFPS(MyGdxGame.FPS);
+		config.setTitle(MyGdxGame.TITLE);
+		config.setWindowedMode(MyGdxGame.V_WIDTH * MyGdxGame.SCALE, MyGdxGame.V_HEIGHT * MyGdxGame.SCALE);
 		new Lwjgl3Application(new MyGdxGame(), config);
 	}
 }

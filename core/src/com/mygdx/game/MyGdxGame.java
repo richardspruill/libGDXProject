@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapRenderer;
@@ -12,76 +13,86 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.entities.Player;
+import com.mygdx.handlers.GameStateManager;
 
+/**
+ * Main Game class
+ *
+ *
+ */
 public class MyGdxGame extends ApplicationAdapter {
-	private Texture maleBack;
-	private Texture grasslands;
-	private Sprite grasslandSprite;
+	public static final String TITLE = "Hood RPG";
+	public static final int V_WIDTH = 600;
+	public static final int V_HEIGHT = 400;
+	public static final int SCALE = 1;
+	public static final int FPS = 60;
+	public static final float STEP = 1 / 60f;
+	private float timeBuffer;
 	private OrthographicCamera camera;
-	private Rectangle character;
+	private OrthographicCamera hudCamera;
 	private TiledMap map1;
-	private MapRenderer mapRenderer;
-	SpriteBatch batch;
-	Texture img;
-	
+	private IsometricTiledMapRenderer mapRenderer;
+
+	private GameStateManager gsm;
+
+	private Player player;
+
+	/**
+	 * Initializes the game
+	 */
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		grasslands = new Texture("grassland_blend/grassland/grass_overcast.png");
-		grasslands.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
-		grasslandSprite = new Sprite(grasslands);
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 400, 200);
-		maleBack = new Texture("male/male_back.png");
-		img = new Texture("badlogic.jpg");
-		character = new Rectangle();
-		map1 = new TmxMapLoader().load("maps/map1.tmx");
 
-		float unitScale = 1/4f;
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, V_WIDTH / 2, V_HEIGHT / 2);
+		hudCamera = new OrthographicCamera();
+		hudCamera.setToOrtho(false, V_WIDTH, V_HEIGHT);
+		map1 = new TmxMapLoader().load("maps/map1.tmx");
+		player = new Player(new Sprite(new Texture("male/male_back.png")));
+		player.setScale(0.4f);
+
+		float unitScale = 1/2f;
 		mapRenderer = new IsometricTiledMapRenderer(map1, unitScale);
-		character.x = 1;
-		character.y = 1;
-		character.width = 8;
-		character.height = 8;
+		gsm = new GameStateManager(this);
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(0, 0, 0.5f, 1);
-		mapRenderer.setView(camera);
-		mapRenderer.render();
-//		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-//		grasslandSprite.draw(batch);
-		batch.draw(maleBack, character.x, character.y);
-		batch.end();
-
-
-		//Character movement
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-			character.x -= 100 * Gdx.graphics.getDeltaTime();
+		timeBuffer += Gdx.graphics.getDeltaTime();
+		while(timeBuffer >= STEP) {
+			timeBuffer -= STEP;
+			gsm.update(STEP);
+			gsm.render();
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-			character.x += 100 * Gdx.graphics.getDeltaTime();
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-			character.y -= 100 * Gdx.graphics.getDeltaTime();
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-			character.y += 100 * Gdx.graphics.getDeltaTime();
-		}
-
-		if(character.x < 0) character.x = 0;
-		if(character.x > 800 - 64) character.x = 800 - 64;
-
-		 camera.position.set(character.getX(), character.getY(), 0);
-		 camera.update();
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+
+	}
+
+	private Vector2 worldToIso(Vector2 point, int tileWidth, int tileHeight) {
+		point.x /= tileWidth;
+//		point.y =
+		return null;
+	}
+
+	public OrthographicCamera getCamera() {
+		return camera;
+	}
+
+	public OrthographicCamera getHudCamera() {
+		return hudCamera;
+	}
+
+	public IsometricTiledMapRenderer getMapRenderer() {
+		return mapRenderer;
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 }
