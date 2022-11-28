@@ -93,33 +93,12 @@ public class Play extends GameState {
         mapRenderer.render();
         Batch batch = mapRenderer.getBatch();
         batch.begin();
-        player.draw(batch);
+        player.render(batch);
         batch.end();
-        player.render();
+
         player.updateBoundaries(MapConfig.getNorthEastBounds(tiledMap));
         camera.position.set(new Vector2(player.getX(), player.getY()), 1f);
         camera.update();
-
-
-        // draw box2d world
-//        box2DRenderer.render(world, box2dCam.combined);
-//
-//        mapRenderer.setView(camera);
-//        mapRenderer.render();
-
-        // get map objects and search through properties
-//        Batch batch = mapRenderer.getBatch();
-//        batch.begin();
-//        game.getPlayer().draw(batch);
-//        batch.end();
-
-//        camera.position.set(game.getPlayer().getX(), game.getPlayer().getY(), 0);
-//        camera.update();
-
-//        game.getPlayer().render();
-
-//        camera.position.set(game.getPlayer().getX(), game.getPlayer().getY(), 0);
-//        camera.update();
     }
 
     @Override

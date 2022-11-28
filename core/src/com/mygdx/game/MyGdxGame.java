@@ -71,7 +71,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	
 	@Override
 	public void dispose () {
-
+		player.dispose();
 	}
 
 	private Vector2 worldToIso(Vector2 point, int tileWidth, int tileHeight) {

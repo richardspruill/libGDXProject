@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.handlers.Animator;
 
 public class Player extends Sprite {
+    /** animation class */
+    private Animator animator;
 
     /** movement velocity */
     private Vector2 velocity;
@@ -15,17 +17,11 @@ public class Player extends Sprite {
     /** movement speed */
     private float speed ;
 
-    private boolean isFacingRight;
-    private boolean isFacingLeft;
-    private boolean isFacingUp;
-    private boolean isFacingDown;
+    private int currentWalkingDirection;
 
     public Player(Sprite sprite){
         super(sprite);
-        isFacingDown = false;
-        isFacingLeft = false;
-        isFacingRight = false;
-        isFacingUp = true;
+        animator = new Animator();
     }
 
     @Override
@@ -38,24 +34,37 @@ public class Player extends Sprite {
 
     }
 
-    public void render(){
+    public void render(Batch batch){
         //Character movement
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
             setX(getX() - 50 * Gdx.graphics.getDeltaTime());
-            resetFacingValue(4);
+            setWalkingAnimation(Animator.WALK_LEFT_INDEX);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
             setX(getX() + 50 * Gdx.graphics.getDeltaTime());
-            resetFacingValue(2);
+            setWalkingAnimation(Animator.WALK_RIGHT_INDEX);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             setY(getY() - 50 * Gdx.graphics.getDeltaTime());
-            resetFacingValue(3);
+            setWalkingAnimation(Animator.WALK_DOWN_INDEX);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.UP)){
             setY(getY() + 50 * Gdx.graphics.getDeltaTime());
-            resetFacingValue(1);
+            setWalkingAnimation(Animator.WALK_UP_INDEX);
         }
+        if(noMovementKeyPressed()) {
+            batch.draw(animator.getStandAnimation(currentWalkingDirection), getX(), getY());
+        } else {
+            batch.draw(animator.getWalkAnimation(currentWalkingDirection), getX(), getY());
+        }
+    }
+
+    private boolean noMovementKeyPressed(){
+        return !Gdx.input.isKeyPressed(Input.Keys.LEFT) &&
+                !Gdx.input.isKeyPressed(Input.Keys.RIGHT) &&
+                !Gdx.input.isKeyPressed(Input.Keys.DOWN) &&
+                !Gdx.input.isKeyPressed(Input.Keys.UP);
+
     }
 
     public void updateBoundaries(Vector2 northEast) {
@@ -80,12 +89,15 @@ public class Player extends Sprite {
 
     /**
      *
-     * @param direction 1 = up, 2 = right, 3 = down, 4 = left
+     * @param direction 0 = up, 1 = right, 2 = down, 3 = left
      */
-    private void resetFacingValue(int direction) {
-        isFacingLeft = direction == 4;
-        isFacingUp = direction == 1;
-        isFacingRight = direction == 2;
-        isFacingDown = direction == 3;
+    private void setWalkingAnimation(int direction) {
+        if (currentWalkingDirection != direction) {
+            currentWalkingDirection = direction;
+        }
+    }
+
+    public void dispose(){
+        animator.dispose();
     }
 }
